@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Heb_Customerform>
+            <version>1.0.0.1</version>
+        </Heb_Customerform>
+    </modules>
+    <global> 
+        <blocks>
+            <customerform>
+                <class>Heb_Customerform_Block</class>
+            </customerform>
+        </blocks>
+    </global>
+    <frontend>
+        <routers>
+            <customerform>
+                <use>standard</use>
+                <args>
+                    <module>Heb_Customerform</module>
+                    <frontName>customerform</frontName>
+                </args>
+            </customerform>
+        </routers>
+        <layout>
+            <updates>
+                <customerform module="Heb_Customerform">
+                    <file>hebcustomer.xml</file>
+                </customerform>
+            </updates> 
+        </layout>
+    </frontend>
+    <adminhtml>
+                
+    </adminhtml>
+    <default>
+        
+    </default>
+</config>
