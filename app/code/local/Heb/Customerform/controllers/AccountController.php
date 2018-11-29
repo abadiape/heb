@@ -33,46 +33,45 @@ class Heb_Customerform_AccountController extends Mage_Core_Controller_Front_Acti
         }
         // Save data
         if ($this->getRequest()->isPost()) {
-            $customer = $this->_getSession()->getCustomer();
-            $customerId = $this->getRequest()->getParam('id');            
-            die('customer/address');
-            /* @var $address Mage_Customer_Model_Address */
-            $address  = Mage::getModel('customer/address');
-            $addressId = $this->getRequest()->getParam('id');
-            if ($addressId) {
-                $existsAddress = $customer->getAddressById($addressId);
-                if ($existsAddress->getId() && $existsAddress->getCustomerId() == $customer->getId()) {
-                    $address->setId($existsAddress->getId());
+            $customer = $this->_getSession()->getCustomer();                                         
+            $customerId = $this->getRequest()->getParam('id');
+            $email = $this->getRequest()->getParam('email');
+            $date = Mage::getModel('core/date')->gmtDate('Y-m-d H:i:s');
+            $data = $this->getRequest()->getParams();
+            
+            if ($customerId == $customer->getId()) {
+                /* @var $info Heb_Customerform_Model_Info */
+                $infoModel  = Mage::getModel('customerform/info');
+                
+                $info = [];
+                foreach ($data as $key => $value)
+                {
+                   if ($key !== 'form_key' && $key !== 'year' && $key !== 'email-confirmation' && strlen($value) > 2)
+                   {
+                      $info[$key] = $value; 
+                   }                    
                 }
-            }
+                $info['parent_id'] = $customerId; 
+                $info['created_at'] = $date;
+                $info['updated_at'] = $date;
+                $infoModel->setData($info); 
+            }                      
 
-            $errors = array();
-
-            /* @var $addressForm Mage_Customer_Model_Form */
-            $addressForm = Mage::getModel('customer/form');
-            $addressForm->setFormCode('customer_address_edit')
-                ->setEntity($address);
-            $addressData    = $addressForm->extractData($this->getRequest());
-            $addressErrors  = $addressForm->validateData($addressData);
-            if ($addressErrors !== true) {
-                $errors = $addressErrors;
-            }
+            $errors = [];            
 
             try {
-                $addressForm->compactData($addressData);
-                $address->setCustomerId($customer->getId())
-                    ->setIsDefaultBilling($this->getRequest()->getParam('default_billing', false))
-                    ->setIsDefaultShipping($this->getRequest()->getParam('default_shipping', false));
-
-                $addressErrors = $address->validate();
+                /*$addressErrors = $address->validate();
                 if ($addressErrors !== true) {
                     $errors = array_merge($errors, $addressErrors);
+                }*/
+                if ($email !== $this->getRequest()->getParam('email-confirmation'))
+                {
+                    $errors[] = 'Verifique por favor su email, los campos relacionados deben coincidir.';
                 }
-
                 if (count($errors) === 0) {
-                    $address->save();
-                    $this->_getSession()->addSuccess($this->__('The address has been saved.'));
-                    $this->_redirectSuccess(Mage::getUrl('*/*/index', array('_secure'=>true)));
+                    $infoModel->save();
+                    $this->_getSession()->addSuccess($this->__('Sus datos han sido guardados.'));
+                    $this->_redirectSuccess(Mage::getUrl('customer/account/index', array('_secure'=>true)));
                     return;
                 } else {
                     $this->_getSession()->setAddressFormData($this->getRequest()->getPost());
@@ -85,11 +84,11 @@ class Heb_Customerform_AccountController extends Mage_Core_Controller_Front_Acti
                     ->addException($e, $e->getMessage());
             } catch (Exception $e) {
                 $this->_getSession()->setAddressFormData($this->getRequest()->getPost())
-                    ->addException($e, $this->__('Cannot save address.'));
+                    ->addException($e, $this->__('Cannot save form.'));
             }
         }
 
-        return $this->_redirectError(Mage::getUrl('*/*/edit', array('id' => $address->getId())));
+        return $this->_redirectError(Mage::getUrl('*/*/edit', array('id' => $customerId)));
     }
 }
 

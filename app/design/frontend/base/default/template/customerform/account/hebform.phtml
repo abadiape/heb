@@ -24,7 +24,7 @@
             <li>
                 <label for="email" class="required"><em>*</em><?php echo $this->__('Email') ?></label>
                 <div class="input-box">
-                    <input type="text" name="email" id="email" value="<?php echo $this->escapeHtml($this->getCustomer()->getEmail()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" class="input-text required-entry validate-email" />
+                    <input type="text" name="email" id="email" value="<?php echo $this->escapeHtml($this->getEmail()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" class="input-text required-entry validate-email" />
                 </div>
             </li>
             <li>
@@ -34,9 +34,9 @@
                 </div>
             </li>
             <li>                
-                <label for="telephone" class="required"><em>*</em><?php echo $this->__('Teléfono (máx. 10 dígitos)') ?></label>
+                <label for="phone" class="required"><em>*</em><?php echo $this->__('Teléfono (máx. 10 dígitos)') ?></label>
                 <div class="input-box">
-                    <input type="text" name="telephone" value="" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Telephone')) ?>" class="input-text  <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?> validate-digits" id="telephone" maxlength="10"/>
+                    <input type="text" name="phone" value="<?php echo $this->escapeHtml($this->getPhone()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Telephone')) ?>" class="input-text  <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?> validate-digits" id="phone" maxlength="10"/>
                 </div>                              
             </li>           
         </ul>

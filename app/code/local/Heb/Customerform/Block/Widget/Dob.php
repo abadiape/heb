@@ -36,19 +36,48 @@ class Heb_Customerform_Block_Widget_Dob extends Mage_Customer_Block_Widget_Abstr
 
     public function getDay()
     {
-        return $this->getTime() ? date('d', $this->getTime()) : '';
+        return $this->getDobFieldValue() ? substr($this->getDobFieldValue(), 8, 2) : '';
     }
 
     public function getMonth()
     {
-        return $this->getTime() ? date('m', $this->getTime()) : '';
+        return $this->getDobFieldValue() ? substr($this->getDobFieldValue(), 5, 2) : '';
     }
 
     public function getYear()
     {
-        return $this->getTime() ? date('Y', $this->getTime()) : '';
+        return $this->getDobFieldValue() ? substr($this->getDobFieldValue(), 0, 4) : '';
     }
-
+    
+    /**
+     * Retrieve HEB customer DOB field value from table heb_customer_info
+     *
+     * @return string
+     */
+    public function getDobFieldValue()
+    {
+        $customer = $this->_getSession()->getCustomer(); 
+        $customerId = $customer->getId(); 
+        $hebCustomerCollection  = Mage::getModel('customerform/info')
+                                ->getCollection()
+                                ->addFieldToFilter('parent_id', $customerId);
+        
+        foreach($hebCustomerCollection as $collection)
+        {
+            return $collection->getData('dob');
+        }
+    }
+    
+    /**
+     * Retrieve customer session object
+     *
+     * @return Mage_Customer_Model_Session
+     */
+    protected function _getSession()
+    {
+        return Mage::getSingleton('customer/session');
+    }
+    
     /**
      * Returns format which will be applied for DOB in javascript
      *

@@ -174,4 +174,34 @@ class Heb_Customerform_Block_Widget_Name extends Mage_Customer_Block_Widget_Abst
         $attribute = $this->_getAttribute($attributeCode);
         return $attribute ? $this->__($attribute->getStoreLabel()) : '';
     }
+    
+    /**
+     * Retrieve HEB customer custom data field value from table heb_customer_info
+     *
+     * @param string $fieldName
+     * @return string
+     */
+    public function getFieldValue($fieldName)
+    {
+        $customer = $this->_getSession()->getCustomer(); 
+        $customerId = $customer->getId(); 
+        $hebCustomerCollection  = Mage::getModel('customerform/info')
+                                ->getCollection()
+                                ->addFieldToFilter('parent_id', $customerId);
+        
+        foreach($hebCustomerCollection as $collection)
+        {
+            return $collection->getData($fieldName);
+        }
+    }
+    
+    /**
+     * Retrieve customer session object
+     *
+     * @return Mage_Customer_Model_Session
+     */
+    protected function _getSession()
+    {
+        return Mage::getSingleton('customer/session');
+    }
 }
