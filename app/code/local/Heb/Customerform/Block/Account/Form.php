@@ -42,6 +42,45 @@ class Heb_Customerform_Block_Account_Form extends Mage_Core_Block_Template
     {
         return 'Cliente Preferencial';
     }
+    
+    /**
+     * Retrieve HEB customer phone field value from table heb_customer_info
+     *
+     * @return string
+     */
+    public function getPhone()
+    {
+        $customer = $this->getCustomer(); 
+        $customerId = $customer->getId(); 
+        $hebCustomerCollection  = Mage::getModel('customerform/info')
+                                ->getCollection()
+                                ->addFieldToFilter('parent_id', $customerId);
+        
+        foreach($hebCustomerCollection as $collection)
+        {
+            return $collection->getData('phone');
+        }
+    }
+    
+    /**
+     * Retrieve HEB customer email field value from table heb_customer_info
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        $customer = $this->getCustomer(); 
+        $customerId = $customer->getId(); 
+        $hebCustomerCollection  = Mage::getModel('customerform/info')
+                                ->getCollection()
+                                ->addFieldToFilter('parent_id', $customerId);
+        
+        foreach($hebCustomerCollection as $collection)
+        {
+            return $collection->getData('email');
+        }
+    }
+    
 }
 
 
