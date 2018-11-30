@@ -54,7 +54,23 @@
         </layout>
     </frontend>
     <adminhtml>
-                
+        <layout>
+            <updates>
+                <customerform module="Heb_Customerform">
+                    <file>hebcustomer.xml</file>
+                </customerform>
+            </updates>
+        </layout>
+        <events>
+            <customer_save_before>
+                <observers>
+                    <heb_customerform>
+                        <class>heb_customerform_model_adminhtml_observer</class>
+                        <method>saveFormulario</method>
+                    </heb_customerform>
+                </observers>
+            </customer_save_before>
+        </events>       
     </adminhtml>
     <default>
         

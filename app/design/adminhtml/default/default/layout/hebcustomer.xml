@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addJs"><script>varien/js.js</script></action>
+            <action method="addJs"><script>varien/form.js</script></action>
+            <action method="addJs"><script>varien/menu.js</script></action>
+        </reference>
+    </default>
+    <adminhtml_customer_edit>
+        <reference name="customer_edit_tabs">
+            <action method="addTab">
+                <name>Formulario</name>
+                <block>customerform/adminhtml_customer_edit_tab_action</block>
+            </action>
+        </reference>
+    </adminhtml_customer_edit>
+</layout>

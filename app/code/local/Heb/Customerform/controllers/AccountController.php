@@ -49,12 +49,24 @@ class Heb_Customerform_AccountController extends Mage_Core_Controller_Front_Acti
                    if ($key !== 'form_key' && $key !== 'year' && $key !== 'email-confirmation' && strlen($value) > 2)
                    {
                       $info[$key] = $value; 
-                   }                    
+                   }                   
                 }
+                
+                $hebCustomerCollection  = $infoModel->getCollection()->addFieldToFilter('parent_id', $customerId);        
+                foreach($hebCustomerCollection as $collection)
+                {
+                    $info['entity_id'] = $collection->getData('entity_id');
+                    $info['updated_at'] = $date;
+                }                
+                                
                 $info['parent_id'] = $customerId; 
-                $info['created_at'] = $date;
-                $info['updated_at'] = $date;
-                $infoModel->setData($info); 
+                if (!$hebCustomerCollection->getSize())
+                {
+                    $info['created_at'] = $date;
+                    $info['updated_at'] = $date;
+                }
+                
+                $infoModel->setData($info);                 
             }                      
 
             $errors = [];            

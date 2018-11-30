@@ -13,8 +13,7 @@
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <form action="<?php echo $this->getSaveUrl() ?>" method="post" id="form-validate" autocomplete="off">
     <div class="fieldset">
-        <?php echo $this->getBlockHtml('formkey')?>
-        <h2 class="legend"><?php echo $this->__('Formulario') ?></h2>
+        <?php echo $this->getBlockHtml('formkey')?>        
         <ul class="form-list">
             <li class="fields">
                 <?php echo $this->getLayout()->createBlock('customerform/widget_name')->setObject($this->getCustomer())->toHtml() ?>

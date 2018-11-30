@@ -1,0 +1,135 @@
+<?php
+/**
+ * Heb customer data custom form
+ *
+ * @see Heb_Customerform_Block_Adminhtml_Customer_Edit_Tab_Action
+ */
+?>
+<?php if($this->getTitle()): ?>
+<div class="page-title">
+    <h1><?php echo $this->getTitle() ?></h1>
+</div>
+<?php endif; ?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="buttons-set" id="add-button-container" style="display: none">                
+    <button id="add-button" type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Add Form')) ?>" class="button"><span><span><?php echo $this->__('+ Crear Formulario') ?></span></span></button>
+</div>
+<form action="<?php echo $this->getSaveUrl() ?>" method="post" id="form-validate" autocomplete="off">
+    <div class="fieldset">
+        <?php echo $this->getBlockHtml('formkey')?>
+        <h2 class="legend"><?php echo $this->__('Datos Complementarios Cliente HEB') ?></h2>
+        <ul class="form-list">
+            <li class="fields">
+                <?php echo $this->getLayout()->createBlock('customerform/adminhtml_widget_name')->setObject($this->getCustomer())->toHtml() ?>
+            </li>
+            <?php $_dob = $this->getLayout()->createBlock('customerform/adminhtml_widget_dob') ?>
+            <li><?php echo $_dob->setDate($this->getCustomer()->getDob())->toHtml() ?></li>
+            <li>
+                <label for="heb-email" class="required"><em>*</em><?php echo $this->__('Email') ?></label>
+                <div class="input-box">
+                    <input type="text" name="email" id="heb-email" value="<?php echo $this->escapeHtml($this->getEmail()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address')) ?>" class="input-text required-entry validate-email" />
+                </div>
+            </li>
+            <li>
+                <label for="email-confirmation" class="required"><em>*</em><?php echo $this->__('Confirmar Email') ?></label>
+                <div class="input-box">
+                    <input type="text" name="email-confirmation" id="email-confirmation" value="" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email Address Confirmation')) ?>" class="input-text required-entry validate-email" />
+                </div>
+            </li>
+            <li>                
+                <label for="heb-phone" class="required"><em>*</em><?php echo $this->__('Teléfono (máx. 10 dígitos)') ?></label>
+                <div class="input-box">
+                    <input type="text" name="phone" value="<?php echo $this->escapeHtml($this->getPhone()) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Telephone')) ?>" class="input-text  <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?> validate-digits" id="heb-phone" maxlength="10"/>
+                </div>                              
+            </li>           
+        </ul>
+    </div>
+    <div class="buttons-set">
+        <p class="required"><?php echo $this->__('* Campos Requeridos') ?></p>        
+        <button id="submit-button" type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Save')) ?>" class="button"><span><span><?php echo $this->__('Guardar Formulario') ?></span></span></button>
+    </div>
+    <div class="buttons-set">                
+        <button id="delete-button" type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Delete')) ?>" class="button"><span><span><?php echo $this->__('Borrar Formulario') ?></span></span></button>
+    </div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+
+    var submitButton = document.getElementById("submit-button");
+    submitButton.addEventListener("click", getFormData);     
+    
+    function getFormData() {
+        const params = {            
+            firstname: document.getElementById("firstname").value,
+            father_lastname: document.getElementById("father_lastname").value,
+            mother_lastname: document.getElementById("mother_lastname").value,
+            dob: document.getElementById("month").value + "/" + document.getElementById("day").value + "/" + document.getElementById("year").value,
+            email:document.getElementById("heb-email").value,   
+            email_confirmation: document.getElementById("email-confirmation").value,
+            phone: document.getElementById("heb-phone").value
+        };
+        if (params.email !== params.email_confirmation)
+        {
+            window.alert("El correo suministrado y su confirmación, tienen que coincidir!");
+            
+            return;
+        } 
+        if (!params.firstname || !params.father_lastname || !params.email || !params.phone)
+        {
+            window.alert("Ningún campo requerido puede estar vacío!");
+            
+            return;
+        }
+        
+        const saveUrl = "<?php echo $this->escapeHtml(Mage::getUrl('customerform/save/formPost', array('_secure'=>true, 'id'=>$this->getCustomer()->getId()))); ?>"; 
+        fetch(saveUrl, {
+            method : "POST",
+            body: new FormData(document.getElementById("form-validate")),//JSON.stringify(params),            
+        }).then(
+            response => response.text(),
+        ).then(
+            html => window.alert(html),
+        );
+        
+        
+    };
+    
+    var deleteButton = document.getElementById("delete-button");
+    deleteButton.addEventListener("click", deleteFormData);
+    
+    function deleteFormData() {
+        var deleteConfirm = window.confirm("Está seguro? Esta información será eliminada.");  
+        
+        if (deleteConfirm)
+        {
+            const deleteFormUrl = "<?php echo $this->escapeHtml(Mage::getUrl('customerform/save/deleteForm', array('_secure'=>true, 'id'=>$this->getCustomer()->getId()))); ?>"; 
+            fetch(deleteFormUrl, {
+                method : "POST",
+                body: new FormData(document.getElementById("form-validate")),          
+            }).then(
+                response => response.text(),
+            ).then(
+                html => window.alert(html),
+            );
+            
+            var hebForm = document.getElementById("form-validate");
+            hebForm.reset();
+            hebForm.style.display = "none";            
+            var addButtonContainer = document.getElementById("add-button-container");
+            addButtonContainer.style.display = "block";
+        }
+     }
+     
+    var addButton = document.getElementById("add-button");
+    addButton.addEventListener("click", addEmptyForm);
+    
+    function addEmptyForm() {          
+        var addButtonContainer = document.getElementById("add-button-container");
+        addButtonContainer.style.display = "none";
+        var hebForm = document.getElementById("form-validate");
+        hebForm.reset();
+        hebForm.style.display = "block";                  
+    }
+//]]>
+</script>
