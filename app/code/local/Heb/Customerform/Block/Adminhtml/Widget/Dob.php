@@ -1,6 +1,6 @@
 <?php
 
-class Heb_Customerform_Block_Widget_Dob extends Mage_Customer_Block_Widget_Abstract
+class Heb_Customerform_Block_Adminhtml_Widget_Dob extends Mage_Customer_Block_Widget_Abstract
 {
     /**
      * Date inputs
@@ -56,8 +56,7 @@ class Heb_Customerform_Block_Widget_Dob extends Mage_Customer_Block_Widget_Abstr
      */
     public function getDobFieldValue()
     {
-        $customer = $this->_getSession()->getCustomer(); 
-        $customerId = $customer->getId(); 
+        $customerId = $this->getRequest()->getParam('id'); 
         $hebCustomerCollection  = Mage::getModel('customerform/info')
                                 ->getCollection()
                                 ->addFieldToFilter('parent_id', $customerId);

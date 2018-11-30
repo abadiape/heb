@@ -6,14 +6,14 @@
             <action method="addLink" translate="label" module="customer">
                 <name>hebcustomer</name>
                 <path>customerform/account/index</path>
-                <label>My Heb Form</label>
+                <label>Formulario</label>
             </action>
         </reference>        
     </customer_account>
     
-    <customerform_account_index> <!-- module here matches node directly beneath <routers> in config.xml -->
-       <update handle="customer_account"/> <!-- include existing customer account layout -->
-       <reference name="my.account.wrapper"> <!-- target parent block -->
+    <customerform_account_index> 
+       <update handle="customer_account"/> 
+       <reference name="my.account.wrapper"> 
            <block type="customerform/account_form" name="heb.customertest.form" template="customerform/account/hebform.phtml"/>           
        </reference>
    </customerform_account_index>

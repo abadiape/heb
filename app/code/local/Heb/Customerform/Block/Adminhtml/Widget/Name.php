@@ -1,6 +1,6 @@
 <?php
 
-class Heb_Customerform_Block_Widget_Name extends Mage_Customer_Block_Widget_Abstract
+class Heb_Customerform_Block_Adminhtml_Widget_Name extends Mage_Customer_Block_Widget_Abstract
 {
     public function _construct()
     {
@@ -176,15 +176,14 @@ class Heb_Customerform_Block_Widget_Name extends Mage_Customer_Block_Widget_Abst
     }
     
     /**
-     * Retrieve HEB customer custom data field value from table heb_customer_info
+     * Retrieve HEB customer name related field value from table heb_customer_info
      *
      * @param string $fieldName
      * @return string
      */
     public function getFieldValue($fieldName)
     {
-        $customer = $this->_getSession()->getCustomer(); 
-        $customerId = $customer->getId(); 
+        $customerId = $this->getRequest()->getParam('id');
         $hebCustomerCollection  = Mage::getModel('customerform/info')
                                 ->getCollection()
                                 ->addFieldToFilter('parent_id', $customerId);

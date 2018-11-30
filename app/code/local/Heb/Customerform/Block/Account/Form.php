@@ -40,7 +40,7 @@ class Heb_Customerform_Block_Account_Form extends Mage_Core_Block_Template
     
     public function getTitle()
     {
-        return 'Cliente Preferencial';
+        return 'Datos Complementarios Cliente HEB';
     }
     
     /**
